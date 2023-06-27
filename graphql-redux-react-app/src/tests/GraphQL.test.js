@@ -22,7 +22,7 @@ const mocks = [
 
 test('renders users list with mocked data', async () => {
   render(
-      <MockedProvider mocks={mocks} addTypename={false}>
+      <MockedProvider mocks={mocks.result.data} addTypename={false}>
         <AppWrapper />
       </MockedProvider>
   );

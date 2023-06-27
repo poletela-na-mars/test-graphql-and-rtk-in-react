@@ -38,24 +38,30 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 
 export const typeDefs = `
  type Book {
+    id: ID
     title: String
     author: String
+    price: Int
   }
   
   type Query {
-    books: [Book]
-    book(author: String!, title: String!): Book
+    getBooks: [Book]
+    getBook(author: String!, title: String!): Book
   }
 `;
 
 const data = [
   {
+    id: '0',
     title: 'The Awakening',
     author: 'Kate Chopin',
+    price: 399,
   },
   {
+    id: '1',
     title: 'City of Glass',
     author: 'Paul Auster',
+    price: 499,
   },
 ];
 

@@ -5,17 +5,17 @@ const initialState = {
   allIds: [],
 };
 
-const postsSlice = createSlice({
-  name: 'posts',
+const booksSlice = createSlice({
+  name: 'books',
   initialState,
   reducers: {
-    addPost: (state, action) => {
+    addBook: (state, action) => {
       state.byId[action.payload.id] = action.payload;
       state.allIds.push(action.payload.id);
     },
   },
 });
 
-export const { addPost } = postsSlice.actions;
+export const { addBook } = booksSlice.actions;
 
-export default postsSlice.reducer;
+export default booksSlice.reducer;
