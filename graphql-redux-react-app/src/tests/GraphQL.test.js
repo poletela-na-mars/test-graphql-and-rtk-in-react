@@ -1,19 +1,29 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 
-import { GET_USER } from '../graphql/queries';
+import { FILTER_BOOKS } from '../graphql/queries';
 import { AppWrapper } from '../App';
 
 const mocks = [
   {
     request: {
-      query: GET_USER,
+      query: FILTER_BOOKS,
     },
     result: {
       data: {
-        users: [
-          { id: 1, name: 'Alice' },
-          // { id: 2, name: 'Bob' },
+        filterBooks: [
+          {
+            id: '0',
+            title: 'The Awakening',
+            author: 'Kate Chopin',
+            price: 399,
+          },
+          {
+            id: '1',
+            title: 'City of Glass',
+            author: 'Paul Auster',
+            price: 499,
+          },
         ],
       },
     },
@@ -22,13 +32,12 @@ const mocks = [
 
 test('renders users list with mocked data', async () => {
   render(
-      <MockedProvider mocks={mocks.result.data} addTypename={false}>
+      <MockedProvider mocks={mocks} addTypename={false}>
         <AppWrapper />
       </MockedProvider>
   );
 
   await waitFor(() => {
-    expect(screen.getByText('Alice')).toBeInTheDocument();
-    // expect(screen.getByText('Bob')).toBeInTheDocument();
+    expect(screen.getByText('Kate Chopin')).toBeInTheDocument();
   });
 });

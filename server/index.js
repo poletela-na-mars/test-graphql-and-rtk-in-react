@@ -46,7 +46,7 @@ export const typeDefs = `
   
   type Query {
     getBooks: [Book]
-    getBook(author: String!, title: String!): Book
+    filterBooks(author: String, title: String): [Book]
   }
 `;
 
@@ -65,11 +65,14 @@ const data = [
   },
 ];
 
+// TODO - remove getBooks
+
 const resolvers = {
   Query: {
     getBooks: () => data,
-    getBook: (_, args) => {
-      return data.find((book) => args.author === book.author && args.title === book.title);
+    filterBooks: (_, args) => {
+      if (!args.author && !args.title) return data;
+      return data.filter((book) => args.author === book.author || args.title === book.title);
     },
   },
 };

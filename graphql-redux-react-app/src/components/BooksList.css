@@ -3,5 +3,46 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0 100px;
+    margin: 0 30px;
+}
+
+.BooksList-container table {
+    table-layout: fixed;
+    width: 60vw;
+    margin: 20px 0;
+    border: 1px solid #dddddd;
+    border-collapse: collapse;
+}
+
+.BooksList-container table th {
+    font-weight: bold;
+    padding: 10px;
+    background: #efefef;
+    border: 1px solid #dddddd;
+}
+
+.BooksList-container table td {
+    border: 1px solid #dddddd;
+    padding: 10px;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.BooksList-search {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.BooksList-search label {
+    padding: 5px;
+}
+
+.BooksList-search input {
+    margin: 5px;
+}
+
+.BooksList-search button {
+    margin: 10px;
 }

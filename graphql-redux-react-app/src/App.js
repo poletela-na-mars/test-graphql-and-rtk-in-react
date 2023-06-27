@@ -13,7 +13,7 @@ const App = () => {
   return (
       <div className='App'>
         <header className='App-header'>
-          <h1>Library</h1>
+          <h1>Book Shop</h1>
           <p>Test GraphQL and Redux Toolkit in React app</p>
         </header>
         <main>
@@ -32,11 +32,3 @@ export const AppWrapper = () => {
       </Provider>
   );
 };
-
-// export const AppWithProvider = () => {
-//   return (
-//       <Provider store={store}>
-//           <App />
-//       </Provider>
-//   );
-// };
