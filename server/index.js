@@ -1,49 +1,70 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 
-export const typeDefs = `type User {
-  id: ID!
-      name: String!
-      posts: [Post!]!
-      comments: [Comment!]!
-}
+// export const typeDefs = `
+// type User {
+//   id: ID!
+//       name: String!
+//       posts: [Post!]!
+//       comments: [Comment!]!
+// }
+//
+// type Post {
+//   id: ID!
+//       title: String!
+//       author: User!
+//       comments: [Comment!]!
+// }
+//
+// type Comment {
+//   id: ID!
+//       content: String!
+//       postId: ID!
+//       author: User!
+// }
+//
+// type Query {
+//   getUsers(): [User!]!
+//   getPost(id: ID!): Post
+//   getComment(id: ID!): Comment
+// }
+//
+// type Mutation {
+//   createUser(name: String!): User!
+//       createPost(title: String!, authorId: ID!): Post!
+//       createComment(content: String!, postId: ID!, authorId: ID!): Comment!
+// }
+// `;
 
-type Post {
-  id: ID!
-      title: String!
-      author: User!
-      comments: [Comment!]!
-}
-
-type Comment {
-  id: ID!
-      content: String!
-      postId: ID!
-      author: User!
-}
-
-type Query {
-  getUsers(): [User!]!
-  getPost(id: ID!): Post
-  getComment(id: ID!): Comment
-}
-
-type Mutation {
-  createUser(name: String!): User!
-      createPost(title: String!, authorId: ID!): Post!
-      createComment(content: String!, postId: ID!, authorId: ID!): Comment!
-}
+export const typeDefs = `
+ type Book {
+    title: String
+    author: String
+  }
+  
+  type Query {
+    books: [Book]
+    book(author: String!, title: String!): Book
+  }
 `;
 
-const data = {
-  users: { id: 1, name: 'John Doe', posts: [], comments: [] },
-  posts: { id: 101, title: 'Integrating GraphQL and Redux Toolkit', authorId: 1 },
-  comments: { id: 1001, content: 'Great post!', postId: 101, authorId: 1 }
-};
+const data = [
+  {
+    title: 'The Awakening',
+    author: 'Kate Chopin',
+  },
+  {
+    title: 'City of Glass',
+    author: 'Paul Auster',
+  },
+];
 
 const resolvers = {
   Query: {
-    getUsers: () => data.users,
+    getBooks: () => data,
+    getBook: (_, args) => {
+      return data.find((book) => args.author === book.author && args.title === book.title);
+    },
   },
 };
 
@@ -59,4 +80,3 @@ const { url } = await startStandaloneServer(server, {
 console.log(`Server ready at: ${url}`);
 
 // TODO - delete express, cors
-// TODO - add resolvers
