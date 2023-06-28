@@ -72,7 +72,10 @@ const resolvers = {
     getBooks: () => data,
     filterBooks: (_, args) => {
       if (!args.author && !args.title) return data;
-      return data.filter((book) => args.author === book.author || args.title === book.title);
+      return data.filter((book) => {
+        return ((args.author ? book.author.toLowerCase().trim().indexOf(args.author) >= 0 : true) &&
+            (args.title ? book.title.toLowerCase().trim().indexOf(args.title) >= 0 : true));
+      });
     },
   },
 };

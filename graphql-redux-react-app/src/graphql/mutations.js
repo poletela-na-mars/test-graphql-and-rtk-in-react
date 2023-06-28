@@ -1,24 +1,13 @@
 import { gql } from '@apollo/client';
 
-const CREATE_USER = gql` 
-  mutation CreateUser($name: String!) {
-    createUser(name: $name) {
-       id
-      name
-    }
-  }
-`;
-
-const CREATE_POST = gql`
-  mutation CreatePost($title: String!, $authorId: ID!) {
-    createPost(title: $title, authorId: $authorId) {
+const CREATE_BOOK = gql`
+  mutation CreateBook($title: String!, $author: String!, $price: Int!, $id: String!) {
+    createBook(title: $title, author: $author, price: $price, id: $id) {
      id
      title
-      author {
-        id
-        name
-      }
+     author
+     price
     }
   }
 `;
-export {CREATE_USER, CREATE_POST};
+export { CREATE_BOOK };

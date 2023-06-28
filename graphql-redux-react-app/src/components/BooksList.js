@@ -4,16 +4,28 @@ import { useEffect, useState } from 'react';
 import { FILTER_BOOKS } from '../graphql/queries';
 
 import './BooksList.css';
+import { AddBookForm } from './AddBookForm';
+import { addBook } from '../redux/booksSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const BooksList = () => {
+  const dispatch = useDispatch();
+  const books = useSelector((state) => state.books);
   let [executeSearch, { data, loading, error }] = useLazyQuery(
       FILTER_BOOKS
   );
   const [searchData, setSearchData] = useState({ author: '', title: '' });
 
+
   useEffect(() => {
     executeSearch();
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      data.filterBooks.forEach(book => dispatch(addBook(book)));
+    }
+  }, [data, dispatch]);
 
   const handleChange = (e) => {
     setSearchData(oldValues => ({
@@ -34,20 +46,24 @@ export const BooksList = () => {
               <input value={searchData.author} type='search' id='author-search' name='author'
                      onChange={handleChange} />
 
-              <label htmlFor='site-search'>Enter title:</label>
+              <label htmlFor='title-search'>Enter title:</label>
               <input value={searchData.title} type='search' id='title-search' name='title'
                      onChange={handleChange} />
 
               <button
                   onClick={() =>
                       executeSearch({
-                        variables: { author: searchData.author, title: searchData.title }
+                        variables: {
+                          author: searchData.author.toLowerCase().trim(),
+                          title: searchData.title.toLowerCase().trim()
+                        }
                       })}
               >Search
               </button>
             </div>
 
             {
+              // TODO - change loading and error to redux
               loading
                   ? <h1>Loading</h1>
                   : error
@@ -62,8 +78,8 @@ export const BooksList = () => {
                         </thead>
                         <tbody>
                         {
-                          data?.filterBooks.map((book) =>
-                              <tr key={book.key}>
+                          books.map((book) =>
+                              <tr key={book.id}>
                                 <td>{book.title}</td>
                                 <td>{book.author}</td>
                                 <td>{book.price}</td>
@@ -73,6 +89,7 @@ export const BooksList = () => {
                         </tbody>
                       </table>
             }
+            <AddBookForm />
           </>
         }
       </div>
