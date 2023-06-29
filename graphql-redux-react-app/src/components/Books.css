@@ -3,12 +3,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0 30px;
+    margin: 10px 30px;
 }
 
 .BooksList-container table {
     table-layout: fixed;
-    width: 60vw;
+    width: 80vw;
     margin: 20px 0;
     border: 1px solid #dddddd;
     border-collapse: collapse;
@@ -28,21 +28,21 @@
     word-wrap: break-word;
 }
 
-.BooksList-search {
+.BooksList-search, .BooksList-add {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.BooksList-search label {
+.BooksList-search label, .BooksList-add label {
     padding: 5px;
 }
 
-.BooksList-search input {
+.BooksList-search input, .BooksList-add input {
     margin: 5px;
 }
 
-.BooksList-search button {
+.BooksList-search button, .BooksList-add button {
     margin: 10px;
 }

@@ -1,15 +1,19 @@
-import { useMutation } from '@apollo/client';
-import { useDispatch } from 'react-redux';
-import { addBook } from '../redux/booksSlice';
-import { CREATE_BOOK } from '../graphql/mutations';
-
-import './BooksList.css';
 import { useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { ADD_BOOK } from '../graphql/mutations';
+
+import { GET_BOOKS } from '../graphql/queries';
+
+import './Books.css';
 
 export const AddBookForm = () => {
-  const dispatch = useDispatch();
   const [bookData, setBookData] = useState({ author: '', title: '', price: '', id: '' });
-  const [createBook] = useMutation(CREATE_BOOK);
+  const [addBook] = useMutation(ADD_BOOK, {
+    refetchQueries: [
+      GET_BOOKS,
+      'GetBooks'
+    ],
+  });
 
   const handleChange = (e) => {
     setBookData(oldValues => ({
@@ -20,20 +24,19 @@ export const AddBookForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data } = await createBook({
+    await addBook({
       variables: {
-        author: bookData.author.toLowerCase().trim(),
-        title: bookData.title.toLowerCase().trim(),
-        price: bookData.price,
+        author: bookData.author.trim(),
+        title: bookData.title.trim(),
+        price: Number(bookData.price.trim()),
         id: bookData.id.trim(),
       }
     });
-    const disp = await dispatch(addBook(data.createBook));
-    console.log(disp)
+    setBookData({ author: '', title: '', price: '', id: '' });
   };
 
   return (
-      <form className='BooksList-search'>
+      <form className='BooksList-add' onSubmit={handleSubmit}>
         <h3>Add the book</h3>
         <label htmlFor='id-add'>Enter id:</label>
         <input value={bookData.id} type='search' id='id-add' name='id'
@@ -51,19 +54,9 @@ export const AddBookForm = () => {
         <input value={bookData.price} type='search' id='price-add' name='price'
                onChange={handleChange} />
 
-        <button type='submit' onSubmit={handleSubmit}
-            // onClick={() =>
-            //     executeSearch({
-            //       variables: {
-            //         author: bookData.author.toLowerCase().trim(),
-            //         title: bookData.title.toLowerCase().trim(),
-            //         price: bookData.price,
-            //         id: bookData.id.trim(),
-            //       }
-            //     })}
-        >Add book
+        <button type='submit' disabled={!bookData.id || !bookData.author || !bookData.price || !bookData.title}>
+          Add book
         </button>
       </form>
   );
-
 };

@@ -1,41 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 
-// export const typeDefs = `
-// type User {
-//   id: ID!
-//       name: String!
-//       posts: [Post!]!
-//       comments: [Comment!]!
-// }
-//
-// type Post {
-//   id: ID!
-//       title: String!
-//       author: User!
-//       comments: [Comment!]!
-// }
-//
-// type Comment {
-//   id: ID!
-//       content: String!
-//       postId: ID!
-//       author: User!
-// }
-//
-// type Query {
-//   getUsers(): [User!]!
-//   getPost(id: ID!): Post
-//   getComment(id: ID!): Comment
-// }
-//
-// type Mutation {
-//   createUser(name: String!): User!
-//       createPost(title: String!, authorId: ID!): Post!
-//       createComment(content: String!, postId: ID!, authorId: ID!): Comment!
-// }
-// `;
-
 export const typeDefs = `
  type Book {
     id: ID
@@ -47,6 +12,11 @@ export const typeDefs = `
   type Query {
     getBooks: [Book]
     filterBooks(author: String, title: String): [Book]
+  }
+  
+  type Mutation {
+    addBook(title: String!, author: String!, price: Int!, id: String!): Book 
+    deleteBook(id: String!): Book
   }
 `;
 
@@ -65,19 +35,25 @@ const data = [
   },
 ];
 
-// TODO - remove getBooks
 
 const resolvers = {
   Query: {
     getBooks: () => data,
-    filterBooks: (_, args) => {
-      if (!args.author && !args.title) return data;
-      return data.filter((book) => {
-        return ((args.author ? book.author.toLowerCase().trim().indexOf(args.author) >= 0 : true) &&
-            (args.title ? book.title.toLowerCase().trim().indexOf(args.title) >= 0 : true));
-      });
-    },
+    // filterBooks: (_, args) => {
+    //   if (!args.author && !args.title) return data;
+    //   return data.filter((book) => {
+    //     return ((args.author ? book.author.toLowerCase().trim().indexOf(args.author) >= 0 : true) &&
+    //         (args.title ? book.title.toLowerCase().trim().indexOf(args.title) >= 0 : true));
+    //   });
+    // },
   },
+  Mutation: {
+    addBook: (_, args) => data.push(args),
+    deleteBook: (_, args) => {
+      const indexOfObject = data.findIndex((book) => book.id === args.id);
+      data.splice(indexOfObject, 1);
+    }
+  }
 };
 
 const server = new ApolloServer({
@@ -90,5 +66,3 @@ const { url } = await startStandaloneServer(server, {
 });
 
 console.log(`Server ready at: ${url}`);
-
-// TODO - delete express, cors

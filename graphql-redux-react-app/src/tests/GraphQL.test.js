@@ -1,17 +1,17 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 
-import { FILTER_BOOKS } from '../graphql/queries';
+import { GET_BOOKS } from '../graphql/queries';
 import { AppWrapper } from '../App';
 
 const mocks = [
   {
     request: {
-      query: FILTER_BOOKS,
+      query: GET_BOOKS,
     },
     result: {
       data: {
-        filterBooks: [
+        getBooks: [
           {
             id: '0',
             title: 'The Awakening',

@@ -1,9 +1,7 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { ApolloProvider } from '@apollo/client';
 
 import apolloClient from './apolloClient';
-import store from './redux/store';
 
 import { BooksList } from './components/BooksList';
 
@@ -14,7 +12,7 @@ const App = () => {
       <div className='App'>
         <header className='App-header'>
           <h1>Book Shop</h1>
-          <p>Test GraphQL and Redux Toolkit in React app</p>
+          <p>Test GraphQL in React app</p>
         </header>
         <main>
           <BooksList />
@@ -25,10 +23,8 @@ const App = () => {
 
 export const AppWrapper = () => {
   return (
-      <Provider store={store}>
-        <ApolloProvider client={apolloClient}>
-          <App />
-        </ApolloProvider>
-      </Provider>
+      <ApolloProvider client={apolloClient}>
+        <App />
+      </ApolloProvider>
   );
 };
