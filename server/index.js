@@ -39,13 +39,13 @@ const data = [
 const resolvers = {
   Query: {
     getBooks: () => data,
-    // filterBooks: (_, args) => {
-    //   if (!args.author && !args.title) return data;
-    //   return data.filter((book) => {
-    //     return ((args.author ? book.author.toLowerCase().trim().indexOf(args.author) >= 0 : true) &&
-    //         (args.title ? book.title.toLowerCase().trim().indexOf(args.title) >= 0 : true));
-    //   });
-    // },
+    filterBooks: (_, args) => {
+      if (!args.author && !args.title) return undefined;
+      return data.filter((book) => {
+        return ((args.author ? (book.author.trim().toLowerCase().indexOf(args.author) >= 0) : false) ||
+            (args.title ? (book.title.trim().toLowerCase().indexOf(args.title) >= 0) : false));
+      });
+    },
   },
   Mutation: {
     addBook: (_, args) => data.push(args),

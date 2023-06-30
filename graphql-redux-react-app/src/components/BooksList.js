@@ -1,30 +1,28 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useState } from 'react';
 
 import { DELETE_BOOK } from '../graphql/mutations';
-import { GET_BOOKS } from '../graphql/queries';
+import { FILTER_BOOKS, GET_BOOKS } from '../graphql/queries';
 
 import { AddBookForm } from './AddBookForm';
 
 import './Books.css';
 
 export const BooksList = () => {
-  let { data, loading, error } = useQuery(
-      GET_BOOKS
-  );
+  const [searchData, setSearchData] = useState({ author: '', title: '' });
+  const allBooks = useQuery(GET_BOOKS);
+  const [filterBooks, filteredBooks] = useLazyQuery(FILTER_BOOKS);
   const [deleteBook] = useMutation(DELETE_BOOK, {
     refetchQueries: [
       GET_BOOKS,
       'GetBooks'
     ],
   });
-  const [searchData, setSearchData] = useState({ author: '', title: '' });
 
-  // TODO - add search
-  // const executeSearch = () => {
-  //   data.getBooks = data.getBooks.filter((book) => (searchData.author ? book.author.toLowerCase().trim().indexOf(searchData.author) >= 0 : true) &&
-  //       (searchData.title ? book.title.toLowerCase().trim().indexOf(searchData.title) >= 0 : true));
-  // };
+  const executeSearch = async () => {
+    const author = searchData.author.trim().toLowerCase(), title = searchData.title.trim().toLowerCase();
+    await filterBooks({ variables: { author: author, title: title } });
+  };
 
   const handleChange = (e) => {
     setSearchData(oldValues => ({
@@ -58,16 +56,18 @@ export const BooksList = () => {
                      onChange={handleChange} />
 
               <button
-                  // onClick={executeSearch}
+                  onClick={executeSearch}
               >Search
               </button>
             </div>
 
             {
-              loading
+              allBooks.loading || filteredBooks.loading
                   ? <h1>Loading</h1>
-                  : error
-                      ? <h1>Error: {error.message}. {error?.networkError.result.errors}</h1>
+                  : allBooks.error || filteredBooks.error
+                      ? <h1>Error: {allBooks.error.message ||
+                          filteredBooks.error.message}. {allBooks.error?.networkError.result.errors ||
+                          filteredBooks.error?.networkError.result.errors}</h1>
                       : <table>
                         <thead>
                         <tr>
@@ -80,7 +80,8 @@ export const BooksList = () => {
                         </thead>
                         <tbody>
                         {
-                          data.getBooks.map((book) =>
+                          (filteredBooks.data?.filterBooks != null ? filteredBooks.data.filterBooks :
+                              allBooks.data.getBooks).map((book) =>
                               <tr key={book.id}>
                                 <td>{book.id}</td>
                                 <td>{book.title}</td>
